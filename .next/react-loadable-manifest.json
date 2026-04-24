@@ -1,0 +1,14 @@
+{
+  "app/page.tsx -> @/components/ui/SmoothScrollProvider": {
+    "id": "app/page.tsx -> @/components/ui/SmoothScrollProvider",
+    "files": [
+      "static/chunks/_app-pages-browser_components_ui_SmoothScrollProvider_tsx.js"
+    ]
+  },
+  "components/ui/CursorWrapper.tsx -> @/components/ui/CustomCursor": {
+    "id": "components/ui/CursorWrapper.tsx -> @/components/ui/CustomCursor",
+    "files": [
+      "static/chunks/_app-pages-browser_components_ui_CustomCursor_tsx.js"
+    ]
+  }
+}
