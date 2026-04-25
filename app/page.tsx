@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import dynamic from 'next/dynamic'
 import Preloader from '@/components/sections/Preloader'
 import Navbar from '@/components/sections/Navbar'
 import Hero from '@/components/sections/Hero'
@@ -17,7 +16,10 @@ import SocialProofTicker from '@/components/ui/SocialProofTicker'
 import Footer from '@/components/sections/Footer'
 import { ScrollTrigger } from '@/lib/gsap'
 
-const SmoothScrollProvider = dynamic(() => import('@/components/ui/SmoothScrollProvider'), { ssr: false })
+// PR-0: SmoothScrollProvider (Lenis) removed; relying on CSS
+// scroll-behavior: smooth on html (set in globals.css) to match
+// the portfolio site. SmoothScrollProvider file kept in tree
+// until the final cleanup PR removes gsap/lenis.
 
 export default function Home() {
   const [preloadDone, setPreloadDone] = useState(false)
@@ -37,7 +39,7 @@ export default function Home() {
   }, [preloadDone])
 
   return (
-    <SmoothScrollProvider>
+    <>
       {!preloadDone && <Preloader onComplete={() => setPreloadDone(true)} />}
       {/* FIXED: Use visibility instead of opacity so the layout is stable and
           ScrollTrigger can measure element positions accurately even before
@@ -65,6 +67,6 @@ export default function Home() {
         <SocialProofTicker />
         <Footer />
       </div>
-    </SmoothScrollProvider>
+    </>
   )
 }

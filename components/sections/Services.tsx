@@ -125,7 +125,9 @@ function IconFunnel({ hovered }: { hovered: boolean }) {
 function IconWeb({ hovered }: { hovered: boolean }) {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" strokeWidth="2" strokeLinecap="round">
-      <span style={{ display: 'contents' }}>
+      {/* FIX: was wrapped in <span> which is invalid inside <svg> and caused
+          a server/client hydration mismatch. SVG <g> is the valid grouping. */}
+      <g>
         <polyline
           points="16,18 22,12 16,6"
           style={{ transform: hovered ? 'translateX(3px)' : 'translateX(0)', transition: 'transform 0.3s ease' }}
@@ -135,7 +137,7 @@ function IconWeb({ hovered }: { hovered: boolean }) {
           style={{ transform: hovered ? 'translateX(-3px)' : 'translateX(0)', transition: 'transform 0.3s ease' }}
         />
         <line x1="19" y1="12" x2="5" y2="12" strokeOpacity="0.4" />
-      </span>
+      </g>
     </svg>
   )
 }

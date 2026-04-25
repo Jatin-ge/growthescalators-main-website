@@ -2,35 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
-:root,
-[data-theme="light"] {
-  --bg-primary:    #F4F0EB;
-  --bg-secondary:  #EDE8E1;
-  --bg-card:       #FDFAF7;
-  --nav-bg:        rgba(244,240,235,0.90);
-  --text-primary:  #0D0D0F;
-  --text-muted:    #6B6370;
-  --orange:        #FF6500;
-  --orange-hover:  #E55A00;
-  --orange-glow:   rgba(255,101,0,0.12);
-  --border:        rgba(255,101,0,0.15);
-  --border-subtle: rgba(255,101,0,0.08);
-  --border-strong: rgba(13,13,15,0.18);
-}
+/* ============================================================
+   Brand tokens — light only, modeled after the portfolio site.
+   Variable names match what existing inline styles already read
+   (var(--orange), var(--text-primary), etc.) so existing pages
+   keep working during migration. Values shifted to portfolio
+   palette: warmer orange, white bg, tri-color accents.
+   ============================================================ */
 
-[data-theme="dark"] {
-  --bg-primary:    #06060A;
-  --bg-secondary:  #111118;
-  --bg-card:       #1A1A24;
-  --nav-bg:        rgba(6,6,10,0.90);
-  --text-primary:  #F0EDE8;
-  --text-muted:    #6B6B7A;
-  --orange:        #FF6500;
-  --orange-hover:  #FF8533;
-  --orange-glow:   rgba(255,101,0,0.10);
-  --border:        rgba(255,101,0,0.15);
-  --border-subtle: rgba(255,101,0,0.08);
-  --border-strong: rgba(240,237,232,0.15);
+:root {
+  /* Surfaces */
+  --bg-primary:    #ffffff;
+  --bg-secondary:  #f8f9ff;
+  --bg-card:       rgba(255, 255, 255, 0.60);
+  --bg-dark:       #0f0f1a;
+  --nav-bg:        rgba(255, 255, 255, 0.75);
+
+  /* Text */
+  --text-primary:   #0f0f1a;
+  --text-secondary: #4b4b6a;
+  --text-muted:     #9898b8;
+  --text-white:     #ffffff;
+
+  /* Brand accents */
+  --orange:        #FF6B35;
+  --orange-hover:  #E55A2A;
+  --orange-glow:   rgba(255, 107, 53, 0.12);
+  --violet:        #6C63FF;
+  --teal:          #00D4AA;
+  --green-wa:      #25D366;
+
+  /* Borders */
+  --border:        rgba(255, 107, 53, 0.20);
+  --border-subtle: rgba(255, 107, 53, 0.10);
+  --border-strong: rgba(15, 15, 26, 0.18);
+
+  /* Glass */
+  --glass-bg:          rgba(255, 255, 255, 0.60);
+  --glass-bg-dark:     rgba(255, 255, 255, 0.05);
+  --glass-border:      rgba(255, 255, 255, 0.85);
+  --glass-border-dark: rgba(255, 255, 255, 0.10);
+  --glass-shadow:
+    0 8px 32px rgba(100, 100, 180, 0.10),
+    0 2px 8px  rgba(100, 100, 180, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.90);
+  --glass-shadow-hover:
+    0 16px 48px rgba(100, 100, 180, 0.18),
+    0 4px  16px rgba(100, 100, 180, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 1.00);
+
+  /* Typography */
+  --fs-h1:   clamp(52px, 8vw, 92px);
+  --fs-h2:   clamp(36px, 5vw, 52px);
+  --fs-h3:   clamp(20px, 2.5vw, 28px);
+  --fs-body: 16px;
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+  --fw-bold:    800;
+  --fw-black:   900;
+  --lh-body: 1.7;
+  --ls-tight: -0.02em;
+  --ls-tighter: -0.03em;
+
+  /* Spacing */
+  --section-py: 100px;
+  --container-max: 1200px;
+  --container-px: 24px;
+
+  /* Radii */
+  --radius:      20px;
+  --radius-md:   14px;
+  --radius-sm:   10px;
+  --radius-pill: 999px;
+
+  /* Transitions */
+  --t-fast:   0.2s ease;
+  --t-base:   0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --t-slow:   0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --t-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 *, *::before, *::after {
@@ -40,81 +90,203 @@
 }
 
 html {
-  scroll-behavior: auto;
+  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
 }
 
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Cabinet Grotesk', var(--font-outfit), sans-serif;
-  cursor: none;
+  font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif;
+  line-height: var(--lh-body);
   overflow-x: hidden;
-  transition: background 0.4s ease, color 0.4s ease;
+  min-height: 100vh;
 }
 
-/* Noise grain */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.022;
-  pointer-events: none;
-  z-index: 9998;
-  background-size: 180px 180px;
-}
-
-/* Soft grid overlay — adaptive per theme */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9997;
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 72px 72px;
-  mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 100%);
-}
-
-:root, [data-theme="light"] {
-  --grid-line: rgba(13, 13, 15, 0.055);
-}
-[data-theme="dark"] {
-  --grid-line: rgba(255, 255, 255, 0.038);
+img { max-width: 100%; display: block; }
+a   { text-decoration: none; color: inherit; }
+ul  { list-style: none; }
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
 }
 
 ::selection {
-  background: #FF6500;
-  color: #FDFAF7;
+  background: rgba(255, 107, 53, 0.20);
+  color: var(--text-primary);
 }
 
-.font-syne   { font-family: 'Cabinet Grotesk', var(--font-syne), sans-serif; font-weight: 800; }
-.font-outfit { font-family: 'Cabinet Grotesk', var(--font-outfit), sans-serif; }
-.font-bebas  { font-family: var(--font-bebas), sans-serif; }
+::-webkit-scrollbar              { width: 6px; }
+::-webkit-scrollbar-track        { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb        { background: rgba(255, 107, 53, 0.35); border-radius: var(--radius-pill); }
+::-webkit-scrollbar-thumb:hover  { background: var(--orange); }
 
-.ge-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-}
-.ge-card:hover {
-  border-color: rgba(255,101,0,0.28);
+:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
-.custom-cursor {
-  will-change: transform;
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 99999;
+/* ============================================================
+   Compatibility aliases — existing main-site code uses
+   font-syne / font-outfit / font-bebas Tailwind classes (32+
+   call sites in /contact, /privacy-policy, etc.). Keep those
+   classes valid but redirect them to Plus Jakarta Sans so we
+   don't have to rewrite every page in PR-0. Per-page rebuilds
+   in later PRs will swap these out for clean utility classes.
+   ============================================================ */
+.font-syne   { font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; font-weight: 800; }
+.font-outfit { font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; }
+.font-bebas  { font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; font-weight: 700; letter-spacing: 0.02em; }
+
+/* ============================================================
+   Global utilities promoted from app/portfolio/portfolio.css
+   so the rest of the site can use them outside /portfolio.
+   ============================================================ */
+
+.container-x {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-px);
 }
 
+.section-padding { padding: var(--section-py) 0; }
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 107, 53, 0.10);
+  color: var(--orange);
+  font-size: 13px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 107, 53, 0.20);
+  margin-bottom: 20px;
+}
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--glass-shadow);
+}
+.glass:hover {
+  box-shadow: var(--glass-shadow-hover);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.glass-pill {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glass-shadow);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--orange), #ff8c5a);
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: var(--fw-bold);
+  padding: 14px 32px;
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.35);
+  transition: transform var(--t-base), box-shadow var(--t-base), background var(--t-base);
+  text-decoration: none;
+}
+.btn-primary:hover {
+  transform: scale(1.04);
+  background: linear-gradient(135deg, var(--violet), var(--orange));
+  box-shadow: 0 8px 32px rgba(108, 99, 255, 0.40);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: var(--fw-semi);
+  padding: 14px 32px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  cursor: pointer;
+  transition: transform var(--t-base), box-shadow var(--t-base), background var(--t-base);
+  text-decoration: none;
+}
+.btn-outline:hover {
+  transform: scale(1.04);
+  background: rgba(255, 255, 255, 0.90);
+  box-shadow: var(--glass-shadow-hover);
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, var(--orange), var(--violet), var(--teal), var(--orange));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s linear infinite;
+  display: inline-block;
+}
+
+/* ── Aurora orbs (drifting blurred radial gradients used as
+       section backgrounds — promoted from portfolio Hero) ── */
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translate(0,    0)    scale(1);    }
+  50%      { transform: translate(40px, -60px) scale(1.08); }
+}
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translate(0,     0)    scale(1);    }
+  50%      { transform: translate(-50px, 40px) scale(1.05); }
+}
+@keyframes orb-drift-3 {
+  0%, 100% { transform: translate(0,    0)    scale(1);    }
+  50%      { transform: translate(30px, 50px) scale(1.10); }
+}
+
+@keyframes gradient-shift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Marquee animations — kept for any existing main-site usage */
+@keyframes marquee-left  { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes marquee-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.animate-marquee-left  { animation: marquee-left  linear infinite; }
+.animate-marquee-right { animation: marquee-right linear infinite; }
+
+/* Cursor blink helper from old globals (used by CyclingWord) */
 .cursor-blink {
   display: inline-block;
   width: 2px;
@@ -125,34 +297,24 @@ body::after {
   animation: blink 1s step-end infinite;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+/* Legacy card class — remap to soft glass during migration so
+   existing components don't look broken before their rebuild PR. */
+.ge-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
-
-@keyframes marquee-left  { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@keyframes marquee-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
-.animate-marquee-left  { animation: marquee-left  linear infinite; }
-.animate-marquee-right { animation: marquee-right linear infinite; }
-
-@keyframes blob1 {
-  0%,100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: scale(1) rotate(0deg); }
-  33%      { border-radius: 30% 70% 70% 30% / 30% 70% 30% 70%; transform: scale(1.05) rotate(3deg); }
-  66%      { border-radius: 70% 30% 50% 50% / 40% 60% 40% 60%; transform: scale(0.97) rotate(-2deg); }
-}
-@keyframes blob2 {
-  0%,100% { border-radius: 40% 60% 60% 40%; transform: scale(1); }
-  50%      { border-radius: 60% 40% 40% 60%; transform: scale(1.08); }
-}
-
-@keyframes pulse-ring {
-  0%   { transform: scale(1);   opacity: 0.6; }
-  100% { transform: scale(1.6); opacity: 0;   }
-}
+.ge-card:hover { box-shadow: var(--glass-shadow-hover); }
 
 .word-muted { color: var(--text-muted); transition: color 0.3s ease; }
 
-::-webkit-scrollbar              { width: 4px; }
-::-webkit-scrollbar-track        { background: transparent; }
-::-webkit-scrollbar-thumb        { background: rgba(255,101,0,0.3); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover  { background: rgba(255,101,0,0.5); }
+@media (max-width: 768px) {
+  :root {
+    --section-py: 72px;
+    --container-px: 20px;
+  }
+}

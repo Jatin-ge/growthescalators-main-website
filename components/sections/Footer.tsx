@@ -1,140 +1,167 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { gsap } from '@/lib/gsap'
-import { Facebook, Instagram, Linkedin } from 'lucide-react'
 import Link from 'next/link'
+import styles from './Footer.module.css'
 
-const SERVICE_LINKS = [
+const SERVICES = [
   'Performance Marketing',
   'Funnel Marketing',
   'Website Development',
+  'SEO & Growth',
   'Personal Branding',
-  'Social Media Marketing',
+  'Social Media',
   'Branding & Identity',
-  'SEO',
 ]
 
-const QUICK_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Our Work', href: '/work' },
-  { label: 'Services', href: '/services' },
-  { label: 'Contact', href: '/contact' },
+const QUICK_LINKS: { label: string; href: string }[] = [
+  { label: 'About Us',     href: '/about'     },
+  { label: 'Our Work',     href: '/work'      },
+  { label: 'Portfolio',    href: '/portfolio' },
+  { label: 'Services',     href: '/services'  },
+  { label: 'Contact',      href: '/contact'   },
 ]
+
+const FacebookIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+  </svg>
+)
+const InstagramIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+  </svg>
+)
+const LinkedInIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+  </svg>
+)
 
 export default function Footer() {
-  const footerRef   = useRef<HTMLElement>(null)
-  const wordmarkRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!wordmarkRef.current || !footerRef.current) return
-    const ctx = gsap.context(() => {
-      gsap.fromTo(wordmarkRef.current, { opacity: 0 }, {
-        opacity: 0.055, duration: 1.2, ease: 'power2.out',
-        scrollTrigger: { trigger: wordmarkRef.current, start: 'top 90%', toggleActions: 'play none none none' },
-      })
-    }, footerRef.current)
-    return () => ctx.revert()
-  }, [])
-
   return (
-    <footer ref={footerRef} data-animate="footer" className="relative overflow-hidden" style={{ background: 'var(--bg-primary)', borderTop: '1px solid var(--border-subtle)' }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24 pt-16 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          <div>
-            <Link href="/" className="font-syne font-extrabold text-xl mb-3 inline-block" style={{ color: 'var(--text-primary)' }}>
-              <span style={{ color: 'var(--orange)' }}>G</span>rowth Escalators
+    <footer id="footer" className={styles.footer} role="contentinfo">
+      <div className={styles.top}>
+        <div className={`${styles.grid} container-x`}>
+          {/* Col 1 — Brand */}
+          <div className={styles.brand}>
+            <Link href="/" className={styles.logoLink} aria-label="Growth Escalators home">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://growthescalators.com/wp-content/uploads/2023/10/growth-escalator-logo.png"
+                alt="Growth Escalators logo"
+                height={36}
+                loading="lazy"
+              />
             </Link>
-            <p className="font-outfit font-light text-sm mb-6 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-              Your Growth, Our Mission. Jaipur-based digital marketing agency scaling brands across India and beyond.
+            <p className={styles.tagline}>Your Growth, Our Mission</p>
+            <p className={styles.blurb}>
+              Jaipur&apos;s most results-obsessed performance marketing agency. We help brands across India scale through data, creativity, and execution.
             </p>
-            <div className="flex gap-3">
-              {[
-                { Icon: Facebook, href: 'https://facebook.com', label: 'Facebook' },
-                { Icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
-                { Icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-              ].map(({ Icon, href, label }) => (
-                <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                  className="w-9 h-9 flex items-center justify-center transition-all duration-300 hover:scale-110"
-                  style={{ border: '1px solid var(--border-subtle)', background: 'var(--bg-card)', color: 'var(--text-muted)' }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--orange)' }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)' }}>
-                  <Icon size={14} />
-                </a>
-              ))}
+            <div className={styles.socials}>
+              <a
+                href="https://facebook.com/growthescalators"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${styles.socialPill} glass-pill`}
+                aria-label="Facebook"
+              >
+                <FacebookIcon />
+              </a>
+              <a
+                href="https://instagram.com/growthescalators"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${styles.socialPill} glass-pill`}
+                aria-label="Instagram"
+              >
+                <InstagramIcon />
+              </a>
+              <a
+                href="https://linkedin.com/company/growth-escalators"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${styles.socialPill} glass-pill`}
+                aria-label="LinkedIn"
+              >
+                <LinkedInIcon />
+              </a>
             </div>
           </div>
 
-          <div>
-            <h4 className="font-outfit text-xs uppercase tracking-[0.3em] mb-5" style={{ color: 'var(--orange)' }}>Services</h4>
-            <ul className="space-y-3">
-              {SERVICE_LINKS.map((s) => (
+          {/* Col 2 — Services */}
+          <div className={styles.col}>
+            <h3 className={styles.colTitle}>Services</h3>
+            <ul className={styles.links}>
+              {SERVICES.map((s) => (
                 <li key={s}>
-                  <Link href="/services" className="font-outfit font-light text-sm transition-colors duration-300 hover:opacity-80" style={{ color: 'var(--text-muted)' }}>{s}</Link>
+                  <Link href="/services">{s}</Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div>
-            <h4 className="font-outfit text-xs uppercase tracking-[0.3em] mb-5" style={{ color: 'var(--orange)' }}>Quick Links</h4>
-            <ul className="space-y-3">
+          {/* Col 3 — Quick Links */}
+          <div className={styles.col}>
+            <h3 className={styles.colTitle}>Quick Links</h3>
+            <ul className={styles.links}>
               {QUICK_LINKS.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="font-outfit font-light text-sm transition-colors duration-300 hover:opacity-80" style={{ color: 'var(--text-muted)' }}>{l.label}</Link>
+                  <Link href={l.href}>{l.label}</Link>
                 </li>
               ))}
+              <li>
+                <a href="https://growthescalators.com" target="_blank" rel="noopener noreferrer">
+                  Blog ↗
+                </a>
+              </li>
             </ul>
           </div>
 
-          <div>
-            <h4 className="font-outfit text-xs uppercase tracking-[0.3em] mb-5" style={{ color: 'var(--orange)' }}>Contact</h4>
-            <div className="space-y-4">
-              <div>
-                <div className="font-outfit text-[10px] uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)', opacity: 0.6 }}>Email</div>
-                <a href="mailto:Info@growthescalators.com" className="font-outfit text-sm transition-colors duration-300" style={{ color: 'var(--text-muted)' }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--orange)' }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)' }}>
-                  Info@growthescalators.com
+          {/* Col 4 — Contact */}
+          <div className={styles.col}>
+            <h3 className={styles.colTitle}>Get In Touch</h3>
+            <ul className={styles.contactList}>
+              <li>
+                <span aria-hidden="true">📞</span>
+                <a href="tel:+917733888883">+91 77338 88883</a>
+              </li>
+              <li>
+                <span aria-hidden="true">✉️</span>
+                <a href="mailto:Info@growthescalators.com">Info@growthescalators.com</a>
+              </li>
+              <li>
+                <span aria-hidden="true">📍</span>
+                <address style={{ fontStyle: 'normal' }}>
+                  264/103-104, Sector 26, Sanganer,
+                  <br />
+                  Pratap Nagar, Jaipur, Rajasthan 302033
+                </address>
+              </li>
+              <li>
+                <a
+                  href="https://maps.google.com/?q=264/103-104+Sector+26+Sanganer+Pratap+Nagar+Jaipur+Rajasthan+302033"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${styles.mapsPill} glass-pill`}
+                >
+                  🗺️ View on Google Maps ↗
                 </a>
-              </div>
-              <div>
-                <div className="font-outfit text-[10px] uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)', opacity: 0.6 }}>Phone</div>
-                <a href="tel:+917733888883" className="font-outfit text-sm transition-colors duration-300" style={{ color: 'var(--text-muted)' }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--orange)' }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)' }}>
-                  +91 77338 88883
-                </a>
-              </div>
-              <div>
-                <div className="font-outfit text-[10px] uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)', opacity: 0.6 }}>Location</div>
-                <p className="font-outfit font-light text-sm" style={{ color: 'var(--text-muted)' }}>Jaipur, Rajasthan, India</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-14 pt-8 text-center" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-          <p className="font-outfit text-xs" style={{ color: 'var(--text-muted)', opacity: 0.5 }}>
-            © 2025 Growth Escalators. All Rights Reserved. Jaipur, Rajasthan.
-          </p>
-          <div className="flex justify-center gap-6 mt-3">
-            <Link href="/privacy-policy" className="font-outfit text-xs hover:opacity-80 transition-opacity duration-300" style={{ color: 'var(--text-muted)', opacity: 0.5 }}>
-              Privacy Policy
-            </Link>
-            <span style={{ color: 'var(--text-muted)', opacity: 0.3 }}>|</span>
-            <Link href="/terms-and-conditions" className="font-outfit text-xs hover:opacity-80 transition-opacity duration-300" style={{ color: 'var(--text-muted)', opacity: 0.5 }}>
-              Terms & Conditions
-            </Link>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
 
-      <div ref={wordmarkRef} className="w-full overflow-hidden pb-2 opacity-0" aria-hidden="true">
-        <div className="font-syne font-extrabold text-center whitespace-nowrap leading-none select-none"
-          style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em', fontSize: 'clamp(28px, 7vw, 110px)' }}>
-          GROWTH ESCALATORS
+      {/* Bottom bar */}
+      <div className={styles.bottom}>
+        <div className={`${styles.bottomInner} container-x`}>
+          {/* Hardcoded year to avoid SSR/CSR hydration mismatch on year-rollover. */}
+          <p className={styles.copy}>© 2026 Growth Escalators, Jaipur. All Rights Reserved.</p>
+          <div className={styles.legal}>
+            <Link href="/privacy-policy">Privacy Policy</Link>
+            <span aria-hidden="true">·</span>
+            <Link href="/terms-and-conditions">Terms &amp; Conditions</Link>
+          </div>
         </div>
       </div>
     </footer>
