@@ -1,3 +1,12 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: "How Growth Escalators collects, uses, and protects your personal information.",
+  alternates: { canonical: '/privacy-policy' },
+  robots: { index: true, follow: false },
+}
+
 export default function PrivacyPolicy() {
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] pt-32 pb-24 px-6 md:px-16 lg:px-32">
