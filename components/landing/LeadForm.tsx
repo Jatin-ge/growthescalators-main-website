@@ -5,9 +5,9 @@ import { motion } from 'framer-motion'
 import styles from './LeadForm.module.css'
 
 type Props = {
-  /** Email address that receives form submissions via mailto fallback. */
+  /** Email address used in the mailto fallback link if /api/lead errors. */
   recipient?: string
-  /** Subject line prefix for the mailto draft. */
+  /** Subject line prefix for the mailto fallback. Also used as the lead `source` label. */
   subjectPrefix?: string
   /** Headline above the form. */
   headline?: string
@@ -17,6 +17,8 @@ type Props = {
   tag?: string
 }
 
+type Status = 'idle' | 'submitting' | 'success' | 'error'
+
 export default function LeadForm({
   recipient = 'Info@growthescalators.com',
   subjectPrefix = 'New Doctor Lead',
@@ -24,39 +26,51 @@ export default function LeadForm({
   subhead = "Fill this in and we'll get back within 24 hours with a no-obligation strategy session.",
   tag = "LET'S TALK",
 }: Props) {
-  const [submitting, setSubmitting] = useState(false)
+  const [status, setStatus] = useState<Status>('idle')
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setSubmitting(true)
-    const data = new FormData(e.currentTarget)
-    const fields: Record<string, string> = {}
+    setStatus('submitting')
+    setErrorMsg(null)
+
+    const form = e.currentTarget
+    const data = new FormData(form)
+    const fields: Record<string, string> = { source: subjectPrefix }
     data.forEach((v, k) => { fields[k] = String(v) })
 
-    const subject = `${subjectPrefix}: ${fields.name || 'Unknown'} (${fields.specialization || 'Doctor'})`
-    const lines = [
-      `Name: ${fields.name || ''}`,
-      `Phone: ${fields.phone || ''}`,
-      `Email: ${fields.email || ''}`,
-      `Clinic / Practice: ${fields.clinic || ''}`,
-      `Specialization: ${fields.specialization || ''}`,
-      `City: ${fields.city || ''}`,
-      `Current monthly marketing spend: ${fields.budget || ''}`,
-      ``,
-      `What they want help with:`,
-      fields.message || '(blank)',
-    ]
-    const body = encodeURIComponent(lines.join('\n'))
-    const mailto = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${body}`
+    // Minimum visible-loader time so fast networks don't flash the button.
+    const minWait = new Promise((r) => setTimeout(r, 200))
 
-    // Open the user's mail client. Mailto is intentionally chosen as a
-    // backend-free interim — replace with a real POST endpoint when CRM is wired.
-    window.location.href = mailto
-
-    // Reset submitting flag after a short beat so the button isn't permanently
-    // locked if the user cancels their mail client.
-    setTimeout(() => setSubmitting(false), 1500)
+    try {
+      const [res] = await Promise.all([
+        fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fields),
+        }),
+        minWait,
+      ])
+      if (!res.ok) {
+        const body = (await res.json().catch(() => ({}))) as { error?: string }
+        throw new Error(body.error || `Server returned ${res.status}`)
+      }
+      setStatus('success')
+      form.reset()
+    } catch (err) {
+      setStatus('error')
+      setErrorMsg((err as Error).message || 'Something went wrong')
+    }
   }
+
+  /** Build a mailto: URL as a fallback when the API call fails. */
+  function buildMailtoFallback(): string {
+    const subject = `${subjectPrefix} (form fallback)`
+    const body = `The contact form on growthescalators.com had an error.\n\nPlease respond to this email and we'll follow up directly.`
+    return `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  }
+
+  const submitting = status === 'submitting'
 
   return (
     <section id="lead-form" className={styles.section} aria-label="Lead form">
@@ -78,6 +92,24 @@ export default function LeadForm({
             </ul>
           </div>
 
+          {status === 'success' ? (
+            <motion.div
+              className={`${styles.form} ${styles.successPanel} glass`}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              role="status"
+              aria-live="polite"
+            >
+              <div className={styles.successCheck} aria-hidden>✓</div>
+              <h3 className={styles.successTitle}>Thanks — we got it.</h3>
+              <p className={styles.successBody}>
+                We&rsquo;ll review your details and reply within 24 hours (weekdays). If you&rsquo;d
+                like to fast-track, you can also reach us at{' '}
+                <a href={`mailto:${recipient}`}>{recipient}</a> or on WhatsApp at +91 77338 88883.
+              </p>
+            </motion.div>
+          ) : (
           <motion.form
             className={`${styles.form} glass`}
             onSubmit={handleSubmit}
@@ -142,13 +174,23 @@ export default function LeadForm({
               className={`btn-primary ${styles.submit}`}
               disabled={submitting}
             >
-              {submitting ? 'Opening your mail app…' : 'Send my enquiry'}
+              {submitting ? 'Sending…' : 'Send my enquiry'}
             </button>
 
+            {status === 'error' && (
+              <p className={styles.errorPanel} role="alert">
+                Couldn&rsquo;t send your enquiry{errorMsg ? ` (${errorMsg})` : ''}.{' '}
+                <a href={buildMailtoFallback()}>Email us directly instead</a> and we&rsquo;ll
+                reply right away.
+              </p>
+            )}
+
             <p className={styles.footnote}>
-              Your details go straight to our team via your email client. We&apos;ll never share them with third parties.
+              We&rsquo;ll only use your details to reply to this enquiry. We never share
+              them with third parties.
             </p>
           </motion.form>
+          )}
         </div>
       </div>
     </section>

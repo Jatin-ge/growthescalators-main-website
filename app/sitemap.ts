@@ -17,6 +17,7 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: Metadata
   { path: '/doctors',                priority: 0.9, changeFrequency: 'monthly' },
   { path: '/roofing',                priority: 0.9, changeFrequency: 'monthly' },
   { path: '/restaurants',            priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/real-estate',            priority: 0.9, changeFrequency: 'monthly' },
   // Legal — keep crawlable but low priority
   { path: '/privacy-policy',         priority: 0.3, changeFrequency: 'yearly'  },
   { path: '/terms-and-conditions',   priority: 0.3, changeFrequency: 'yearly'  },

@@ -75,7 +75,26 @@ The site is fully statically prerendered (every route shows as `(Static)` in `np
 
 ### Lead form behavior
 
-`components/landing/LeadForm.tsx` submits via `mailto:` — opens the user's mail client with all fields prefilled. There is no backend. Replace with a real `POST /api/lead` endpoint when CRM wiring is in scope. The recipient and subject prefix are passed as props by each industry page's `content.leadForm`.
+`components/landing/LeadForm.tsx` POSTs to `/api/lead` (`app/api/lead/route.ts`). The handler tries up to two delivery channels and falls back to a server log:
+
+1. **Resend email** — set `RESEND_API_KEY`. Sends to `LEAD_NOTIFY_EMAIL` (default `Info@growthescalators.com`). Until a domain is verified in Resend, the from address falls back to `onboarding@resend.dev` — set `LEAD_FROM_EMAIL` once a verified sending domain exists (e.g. `Growth Escalators <hello@mail.growthescalators.com>`).
+2. **Generic webhook** — set `LEAD_WEBHOOK_URL` to any HTTPS endpoint that accepts a JSON POST. Use this to plumb leads into Slack, Zapier, n8n, ClickUp, or your CRM. Both channels run in parallel — having both configured is fine and gives you redundancy.
+3. **Server-log fallback** — if neither env var is set, the lead is still validated and logged via `console.log('[lead]', …)` in stdout. The form still returns success to the user, so previews work without configuration.
+
+The form-submission lifecycle (`'idle' | 'submitting' | 'success' | 'error'`) is owned by `LeadForm.tsx` itself. On success the form is replaced with a thank-you panel. On error a fallback `mailto:` link is shown so users are never blocked.
+
+Rate limit: 5 requests per minute per IP, in-memory (not persisted across cold starts). Trivial spam protection — don't depend on it for serious abuse mitigation.
+
+### Environment variables
+
+All optional. Set in Vercel → Project → Settings → Environment Variables for production.
+
+| Var | Used by | Purpose |
+|---|---|---|
+| `RESEND_API_KEY`     | `app/api/lead/route.ts` | Enables email delivery via Resend |
+| `LEAD_NOTIFY_EMAIL`  | `app/api/lead/route.ts` | Recipient (default `Info@growthescalators.com`) |
+| `LEAD_FROM_EMAIL`    | `app/api/lead/route.ts` | Sender (default `Growth Escalators <onboarding@resend.dev>`) |
+| `LEAD_WEBHOOK_URL`   | `app/api/lead/route.ts` | POST leads as JSON to any HTTPS URL |
 
 ### Git / branching conventions observed
 

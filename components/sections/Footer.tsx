@@ -28,6 +28,7 @@ const INDUSTRIES: { label: string; href: string }[] = [
   { label: 'For Doctors',     href: '/doctors'     },
   { label: 'For Roofers',     href: '/roofing'     },
   { label: 'For Restaurants', href: '/restaurants' },
+  { label: 'For Real Estate', href: '/real-estate' },
 ]
 
 const FacebookIcon = () => (
