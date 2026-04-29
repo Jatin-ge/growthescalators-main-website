@@ -1,3 +1,12 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Terms & Conditions',
+  description: "Terms and conditions governing use of growthescalators.com and Growth Escalators services.",
+  alternates: { canonical: '/terms-and-conditions' },
+  robots: { index: true, follow: false },
+}
+
 export default function TermsAndConditions() {
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] pt-32 pb-24 px-6 md:px-16 lg:px-32">

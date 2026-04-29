@@ -18,7 +18,16 @@ const QUICK_LINKS: { label: string; href: string }[] = [
   { label: 'Our Work',     href: '/work'      },
   { label: 'Portfolio',    href: '/portfolio' },
   { label: 'Services',     href: '/services'  },
+  { label: 'Blog',         href: '/blog'      },
   { label: 'Contact',      href: '/contact'   },
+]
+
+/* Industry landing pages — surfaced in the footer so they're crawlable
+   from anywhere on the site (otherwise they're orphan pages SEO-wise). */
+const INDUSTRIES: { label: string; href: string }[] = [
+  { label: 'For Doctors',     href: '/doctors'     },
+  { label: 'For Roofers',     href: '/roofing'     },
+  { label: 'For Restaurants', href: '/restaurants' },
 ]
 
 const FacebookIcon = () => (
@@ -100,7 +109,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 3 — Quick Links */}
+          {/* Col 3 — Quick Links + Industries */}
           <div className={styles.col}>
             <h3 className={styles.colTitle}>Quick Links</h3>
             <ul className={styles.links}>
@@ -109,11 +118,15 @@ export default function Footer() {
                   <Link href={l.href}>{l.label}</Link>
                 </li>
               ))}
-              <li>
-                <a href="https://growthescalators.com" target="_blank" rel="noopener noreferrer">
-                  Blog ↗
-                </a>
-              </li>
+            </ul>
+
+            <h3 className={styles.colTitle} style={{ marginTop: 28 }}>Industries</h3>
+            <ul className={styles.links}>
+              {INDUSTRIES.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href}>{l.label}</Link>
+                </li>
+              ))}
             </ul>
           </div>
 

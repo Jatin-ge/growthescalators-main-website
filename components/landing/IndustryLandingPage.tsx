@@ -98,11 +98,35 @@ function FaqItem({ q, a, defaultOpen = false }: { q: string; a: string; defaultO
   )
 }
 
+/* ── JSON-LD FAQPage schema — emits the industry's FAQs as structured data
+   so they're eligible for FAQ rich-results in Google, which significantly
+   increases SERP click-through rate. */
+function FaqPageJsonLd({ faqs }: { faqs: { q: string; a: string }[] }) {
+  if (faqs.length === 0) return null
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  }
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
+}
+
 export default function IndustryLandingPage({ content }: { content: LandingContent }) {
   const cycle = useCyclingWord(content.hero.cyclingWords)
 
   return (
     <div className={styles.page}>
+      <FaqPageJsonLd faqs={content.faqs} />
+
       {/* ── HEADER ─────────────────────────────────────────────────────── */}
       <header className={styles.header}>
         <div className={`${styles.headerInner} container-x`}>
